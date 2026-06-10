@@ -26,4 +26,4 @@ var roleUpgrader = {
     }
 };
 
-export default roleUpgrader;
+module.exports = roleUpgrader;
