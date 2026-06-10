@@ -3,7 +3,7 @@ var spawnCreeps = function () {
     if (Game.spawns['Spawn1'].spawning) {
         var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
         Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
+            '!️' + spawningCreep.memory.role,
             Game.spawns['Spawn1'].pos.x + 1,
             Game.spawns['Spawn1'].pos.y,
             { align: 'left', opacity: 0.8 });
@@ -11,9 +11,10 @@ var spawnCreeps = function () {
         var level = Game.spawns['Spawn1'].room.controller.level;
 
         var creepsTargets = {
-            harvester: { total: 2 * level, priority: 1 },
-            builder: { total: 2 * (level - 1), priority: 2 },
-            upgrader: { total: 2 * level, priority: 3 }
+            // reserver: { total: 1, priority: 0, attributes: [MOVE, CLAIM] },
+            harvester: { total: 2 * level, priority: 1, attributes: [WORK, CARRY, MOVE] },
+            builder: { total: 2 * (level - 1) + 1, priority: 2, attributes: [WORK, CARRY, MOVE] },
+            upgrader: { total: 2 * level, priority: 3, attributes: [WORK, CARRY, MOVE] }
         };
 
         for (var target in creepsTargets) {
@@ -29,9 +30,10 @@ var spawnCreeps = function () {
                 var newName = target.charAt(0).toUpperCase() + target.slice(1) + Game.time;
 
                 console.log('Spawning new ' + target + ': ' + newName);
-                var result = Game.spawns['Spawn1'].spawnCreep([WORK, CARRY, MOVE], newName,
+                var result = Game.spawns['Spawn1'].spawnCreep(creepsTargets[target].attributes, newName,
                     { memory: { role: target } });
-                return;
+                console.log(result);
+                break;
             }
         }
     }
