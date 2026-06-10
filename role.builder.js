@@ -13,14 +13,25 @@ var roleBuilder = {
         }
 
         if (creep.memory.building) {
-            var targets = creep.room.find(FIND_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == STRUCTURE_EXTENSION || site.structureType == STRUCTURE_CONTAINER} });
+            var priorityTargets = creep.room.find(FIND_MY_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == STRUCTURE_EXTENSION || site.structureType == STRUCTURE_CONTAINER} });
             
-            if (targets.length) {
-                if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
+            if (priorityTargets.length) {
+                creep.say('building prio');
+                if (creep.build(priorityTargets[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(priorityTargets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             } else {
-                creep.moveTo(20, 20);
+                var targets = creep.room.find(FIND_MY_CONSTRUCTION_SITES);
+                creep.say('buillding non prio');
+                if (targets.length) {
+                    if (creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
+                        creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
+                    }
+                }
+                else {
+                    creep.say('im finished');
+                    creep.moveTo(20, 20);
+                }
             }
         }
         else {

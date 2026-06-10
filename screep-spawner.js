@@ -12,28 +12,38 @@ var spawnCreeps = function () {
 
         var creepsTargets = {
             // reserver: { total: 1, priority: 0, attributes: [MOVE, CLAIM] },
-            harvester: { total: 2 * level, priority: 1, attributes: [WORK, CARRY, MOVE] },
-            builder: { total: 2 * (level - 1) + 1, priority: 2, attributes: [WORK, CARRY, MOVE] },
-            upgrader: { total: 2 * level, priority: 3, attributes: [WORK, CARRY, MOVE] }
+            harvester: { total: level, priority: 1, attributes: [WORK, CARRY, MOVE] },
+            defender: { total : 5 * level, priority: 2, attributes: [ATTACK, ATTACK, MOVE, MOVE, TOUGH]  },
+            builder: { total: level, priority: 2, attributes: [WORK, CARRY, MOVE] },
+            upgrader: { total: 2 * level, priority: 3, attributes: [WORK, CARRY, MOVE] },
+            builder: { total: level + 1, priority: 2, attributes: [WORK, CARRY, MOVE] },
+            repairer: { total: 2, priority: 2, attributes: [WORK, CARRY, MOVE] }
         };
 
         for (var target in creepsTargets) {
             creepsTargets[target].count = _.filter(Game.creeps, (creep) => creep.memory.role == target).length;
         }
 
-        var sortedTargets = _.sortBy(Object.keys(creepsTargets), (target) => creepsTargets[target].priority);
-
+        var sortedTargets = _.sortBy(
+            Object.keys(creepsTargets),
+            (target) => [creepsTargets[target].count, creepsTargets[target].priority]
+        );
+        
         for (var i = 0; i < sortedTargets.length; i++) {
             var target = sortedTargets[i];
             if (creepsTargets[target].count < creepsTargets[target].total) {
 
                 var newName = target.charAt(0).toUpperCase() + target.slice(1) + Game.time;
+                console.log("Attempting spawn: " + target);
 
-                console.log('Spawning new ' + target + ': ' + newName);
                 var result = Game.spawns['Spawn1'].spawnCreep(creepsTargets[target].attributes, newName,
                     { memory: { role: target } });
-                console.log(result);
-                break;
+                if (result == 0) {
+                    
+                    console.log('Spawning new ' + target + ': ' + newName);
+                    break;
+                }
+
             }
         }
     }

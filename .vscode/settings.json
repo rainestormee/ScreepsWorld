@@ -1,0 +1,6 @@
+{
+    "github.copilot.enable": {
+        "*": false
+    },
+    "js/ts.validate.enabled": false
+}   
