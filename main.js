@@ -6,7 +6,6 @@ var spawnCreeps = require('screep-spawner');
 
 module.exports.loop = function () {
 
-    runTower();
     for (var name in Memory.creeps) {
 
         if (!Game.creeps[name]) {
@@ -15,24 +14,18 @@ module.exports.loop = function () {
         }
     }
 
-    spawnCreeps();
+    runTower();
 
-    if (Game.spawns['Spawn1'].spawning) {
-        var spawningCreep = Game.creeps[Game.spawns['Spawn1'].spawning.name];
-        Game.spawns['Spawn1'].room.visual.text(
-            '🛠️' + spawningCreep.memory.role,
-            Game.spawns['Spawn1'].pos.x + 1,
-            Game.spawns['Spawn1'].pos.y,
-            { align: 'left', opacity: 0.8 });
-    }
+    console.log('Current game tick is ' + Game.time);
+    spawnCreeps();
 
     for (var name in Game.creeps) {
         var creep = Game.creeps[name];
+
         if (creep.memory.role == 'harvester') {
             roleHarvester.run(creep);
         }
         if (creep.memory.role == 'upgrader') {
-            console.log("upgrader");
             roleUpgrader.run(creep);
         }
         if (creep.memory.role == 'builder') {

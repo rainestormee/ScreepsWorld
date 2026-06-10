@@ -19,7 +19,7 @@ var roleBuilder = {
                     creep.moveTo(targets[0], { visualizePathStyle: { stroke: '#ffffff' } });
                 }
             } else {
-                creep.moveTo(0, 0);
+                creep.moveTo(20, 20);
             }
         }
         else {
