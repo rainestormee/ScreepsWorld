@@ -8,17 +8,28 @@ var spawnCreeps = function () {
             Game.spawns['Spawn1'].pos.y,
             { align: 'left', opacity: 0.8 });
     } else {
-        var level = Game.spawns['Spawn1'].room.controller.level;
+        var room = Game.spawns['Spawn1'].room;
+        var level = room.controller.level;
+        var hostiles = room.find(FIND_HOSTILE_CREEPS).length;
+        var building = room.find(FIND_MY_CONSTRUCTION_SITES).length > 0;
 
         var creepsTargets = {
             // reserver: { total: 1, priority: 0, attributes: [MOVE, CLAIM] },
             harvester: { total: level, priority: 1, attributes: [WORK, CARRY, MOVE] },
-            defender: { total : 5 * level, priority: 2, attributes: [ATTACK, ATTACK, MOVE, MOVE, TOUGH]  },
-            builder: { total: level, priority: 2, attributes: [WORK, CARRY, MOVE] },
-            upgrader: { total: 2 * level, priority: 3, attributes: [WORK, CARRY, MOVE] },
-            builder: { total: level + 1, priority: 2, attributes: [WORK, CARRY, MOVE] },
-            repairer: { total: 2, priority: 2, attributes: [WORK, CARRY, MOVE] }
+            defender: { total : hostiles + 2, priority: 2, attributes: [ATTACK, ATTACK, MOVE, MOVE, TOUGH]  },
+            upgrader: { total: 2 * level, priority: 2, attributes: [WORK, CARRY, MOVE] },
+            repairer: { total: level, priority: 2, attributes: [WORK, CARRY, MOVE] },
+            builder: { total: building * level, priority: 3, attributes: [WORK, CARRY, MOVE] },
+            scout: {total: 1, priority: 10, attributes: [MOVE, MOVE, MOVE]},
         };
+        
+        if (room.find(FIND_MY_STRUCTURES, {filter: { structureType: STRUCTURE_EXTENSION}}).length == 5) {
+            creepsTargets['harvester'].attributes = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
+            creepsTargets['upgrader'].attributes = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
+            creepsTargets['builder'].attributes = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
+            creepsTargets['repairer'].attributes = [WORK, WORK, CARRY, CARRY, MOVE, MOVE];
+            creepsTargets['defender'].attributes = [ATTACK, ATTACK, ATTACK, ATTACK, MOVE, MOVE, MOVE, MOVE, TOUGH, TOUGH, TOUGH];
+        }
 
         for (var target in creepsTargets) {
             creepsTargets[target].count = _.filter(Game.creeps, (creep) => creep.memory.role == target).length;
@@ -37,7 +48,7 @@ var spawnCreeps = function () {
                 console.log("Attempting spawn: " + target);
 
                 var result = Game.spawns['Spawn1'].spawnCreep(creepsTargets[target].attributes, newName,
-                    { memory: { role: target } });
+                    { memory: { role: target, target: 'W4N8' } });
                 if (result == 0) {
                     
                     console.log('Spawning new ' + target + ': ' + newName);

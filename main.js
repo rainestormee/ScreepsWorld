@@ -4,6 +4,7 @@ var roleBuilder = require('role.builder');
 var roleReserver = require('role.reserver');
 var roleDefender = require('role.defender');
 var roleRepairer = require('role.repairer');
+var roleScout = require('role.scout');
 var runTower = require('tower');
 var spawnCreeps = require('screep-spawner');
 
@@ -48,6 +49,10 @@ module.exports.loop = function () {
             }
             case 'repairer': {
                 roleRepairer.run(creep);
+                break;
+            }
+            case 'scout': {
+                roleScout.run(creep);
                 break;
             }
         }

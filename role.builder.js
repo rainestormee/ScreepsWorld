@@ -13,8 +13,8 @@ var roleBuilder = {
         }
 
         if (creep.memory.building) {
-            var priorityTargets = creep.room.find(FIND_MY_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == STRUCTURE_EXTENSION || site.structureType == STRUCTURE_CONTAINER} });
-            
+            var priorityTargets = creep.room.find(FIND_MY_CONSTRUCTION_SITES, { filter: (site) => { return site.structureType == STRUCTURE_EXTENSION || site.structureType == STRUCTURE_CONTAINER } });
+
             if (priorityTargets.length) {
                 creep.say('building prio');
                 if (creep.build(priorityTargets[0]) == ERR_NOT_IN_RANGE) {
@@ -29,8 +29,7 @@ var roleBuilder = {
                     }
                 }
                 else {
-                    creep.say('im finished');
-                    creep.moveTo(20, 20);
+                    
                 }
             }
         }
